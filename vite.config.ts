@@ -16,4 +16,18 @@ export default defineConfig({
     },
   },
   plugins: [svelte(svelteConfig), tailwindcss()],
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        passes: 3,
+      },
+    },
+    rollupOptions: {
+      input: [
+        path.resolve(__dirname, "src/main.ts"),
+        path.resolve(__dirname, "index.html"),
+      ]
+    }
+  }
 });
