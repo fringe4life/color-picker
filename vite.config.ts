@@ -9,18 +9,14 @@ import path from 'node:path';
 
 // https://vite.dev/config/
 export default defineConfig({
-  resolve: {
-    alias: {
-      "$lib": path.resolve("./src/lib"),
-      "$lib/components": path.resolve("./src/lib/components"),
-    },
-  },
   plugins: [svelte(svelteConfig), tailwindcss()],
   build: {
     minify: 'terser',
     terserOptions: {
       compress: {
         passes: 3,
+        drop_console: true,
+        drop_debugger: true,
       },
     },
     rollupOptions: {
