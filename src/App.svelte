@@ -1,5 +1,6 @@
 <script lang="ts" >
   import type { MouseEventHandler } from "svelte/elements";
+    import { fade, fly } from "svelte/transition";
 
   type ReturnedColors = {
 			mode: string;
@@ -51,8 +52,7 @@
    * The colors state.
    */
   let colors: ReturnedColors | undefined = $state(undefined);
-    $inspect(colors);
-
+  
   /**
    * @abstract updates the dom with the fetched colors.
    * @param _ The event object.
@@ -92,47 +92,69 @@
   }
 </script>
 
-<header>
-  <input type="color" bind:value={color} />
-  <select bind:value={colorStyleSelected}>
-    <option value="monochrome">Monochrome</option>
-    <option value="monochrome-dark">Monochrome-dark</option>
-    <option value="monochrome-light">Monochrome-light</option>
-    <option value="analogic">Analogic</option>
-    <option value="complement">Complement</option>
-    <option value="analogic-complement">Analogic-complement</option>
-    <option value="triad">Triad</option>
+<header class="dark:bg-[#1F2937] dark:text-white px-5 py-6 flex justify-evenly items-center gap-3 flex-wrap sm:justify-center">
+  <input class="shadow-md h-12 px-2 rounded-sm" type="color" bind:value={color} />
+  <select class="leading-6 border border-gray-200 flex-1 text-center shadow-md py-3 px-2 rounded-sm" bind:value={colorStyleSelected}>
+    <option class="hover:shadow-sm" value="monochrome">Monochrome</option>
+    <option class="hover:shadow-sm" value="monochrome-dark">Monochrome-dark</option>
+    <option class="hover:shadow-sm" value="monochrome-light">Monochrome-light</option>
+    <option class="hover:shadow-sm" value="analogic">Analogic</option>
+    <option class="hover:shadow-sm" value="complement">Complement</option>
+    <option class="hover:shadow-sm" value="analogic-complement">Analogic-complement</option>
+    <option class="hover:shadow-sm" value="triad">Triad</option>
   </select>
-  <button onclick={handleClick}>Get Color Scheme</button>
+  <button class="text-[#374151] dark:text-white dark:bg-[#3D4B60] shadow-md py-3 px-2 rounded-sm border border-gray-200" onclick={handleClick}>Get Color Scheme</button>
 </header>
 
-<main class="flex  h-120 w-full flex-col flex-wrap md:flex-row md:flex-nowrap">
+<main class="grid-autofit dark:bg-[#1F2937] dark:text-white">
   {#if isLoading }
-
-    <p>Loading...</p>
+  <!-- <div class="col-span-full  h-80 flex justify-center items-center">
+    <p class="">Loading...</p>
+    <div class="rounded-full text-transparent border-2 w-10 h-10 animate-spin" ></div>
+  </div> -->
+  
+    <div in:fly={{y: 10}} out:fade={{duration: 250}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-50 rounded-sm"></div>
+    <div in:fly={{y:50}} out:fade={{duration: 250}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-100 rounded-sm"></div>
+    <div in:fly={{y: 90}} out:fade={{duration: 250}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-200 rounded-sm"></div>
+    <div in:fly={{y: 140}} out:fade={{duration: 250}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-300 rounded-sm"></div>
+    <div in:fly={{y: 200}} out:fade={{duration: 250}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-400 rounded-sm"></div>
 
   {:else if hasError}
 
-    <p>{hasError}</p>
+    <p class="col-span-full">{hasError}</p>
 
   {:else if colors}
 
       {#each colors.colors as color}
-        <div class="flex flex-1 flex-col">
-          <div class="w-full h-40" style="background-color: {color.hex.value}">
-              
-          </div>
-          <p>{color.hex.value}</p>
+        <div in:fly={{y: 200}} class="col-span-1">
+          <div class="h-80" style="background-color: {color.hex.value}"></div>
+          <p class="my-4 text-center">{color.hex.value}</p>
         </div>
       {/each}
 
-
+  {:else }
+    <p class="col-span-full flex justify-center items-center h-80 ">No colors to display</p>
   {/if}
 </main>
 
-<footer>
+<footer class="dark:bg-[#1F2937] text-center py-5 hover:text-blue-500 active:text-blue-700">
   <a href="https://www.flaticon.com/free-icons/palette" title="palette icons">Palette icons created by nawicon - Flaticon</a>
 </footer>
 
 <style>
+  .grid-autofit {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+  option, select {
+    color: #111827;
+  }
+  @media (prefers-color-scheme: dark) {
+    select, option {
+      background-color: #1F2937;
+      color: white
+    }
+  }
+
 </style>
+
