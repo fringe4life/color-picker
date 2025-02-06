@@ -21,6 +21,9 @@ export default defineConfig({
       },
       output: {
         comments: false,
+      },
+      mangle: {
+        toplevel: true,
       }
     },
     rollupOptions: {
