@@ -1,7 +1,10 @@
-<script lang="ts" >
-  import type { MouseEventHandler } from "svelte/elements";
-    import { fade, fly } from "svelte/transition";
+<script lang="ts">
+  import type { KeyboardEventHandler, MouseEventHandler } from "svelte/elements";
+  import { fade, fly } from "svelte/transition";
 
+  /**
+   * The type for the returned colors from the API.
+   */
   type ReturnedColors = {
 			mode: string;
 			colors: {
@@ -62,15 +65,42 @@
     colors = await fetchColors();
 
     if(!colors) {
+      hasError = "Failed to fetch colors";
+      isLoading = false;
       return;
-
-      // error message or something
     }
-
     isLoading = false;
-
   } 
 
+  /**
+   * @abstract copies the color hex value to the clipboard.
+   * @param event The event object.
+   */
+  const copyColorToClipboard: MouseEventHandler<HTMLDivElement>=(event)=> {
+    getHexColor(event);
+  }
+
+  /**
+   * @abstract handle keyboard events to copy color hex value to clipboard.
+   * @param event The event object.
+   */
+  const handleKeyboard: KeyboardEventHandler<HTMLDivElement> = (event) => {
+    if(event.key === 'Enter') {
+      getHexColor(event);
+    }
+  }
+
+  /**
+   * 
+   */
+  function getHexColor(event: MouseEvent | KeyboardEvent): void {
+    const colorHex = (event.currentTarget as HTMLElement).querySelector(
+					"p",
+				)?.textContent;
+				if (colorHex) {
+					navigator.clipboard.writeText(colorHex);
+				}
+  }
   /**
    * Fetch colors from the API
    */
@@ -93,7 +123,7 @@
 </script>
 
 <header class="dark:bg-[#1F2937] dark:text-white px-5 py-6 flex justify-evenly items-center gap-3 flex-wrap sm:justify-center">
-  <input class="shadow-md h-12 px-2 rounded-sm" type="color" bind:value={color} />
+  <input class="shadow-md h-12 w-18 rounded-sm" type="color" bind:value={color} />
   <select class="leading-6 border border-gray-200 flex-1 text-center shadow-md py-3 px-2 rounded-sm" bind:value={colorStyleSelected}>
     <option class="hover:shadow-sm" value="monochrome">Monochrome</option>
     <option class="hover:shadow-sm" value="monochrome-dark">Monochrome-dark</option>
@@ -113,25 +143,23 @@
     <div class="rounded-full text-transparent border-2 w-10 h-10 animate-spin" ></div>
   </div> -->
   
-    <div in:fly={{y: 10}} out:fade={{duration: 250}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-50 rounded-sm"></div>
-    <div in:fly={{y:50}} out:fade={{duration: 250}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-100 rounded-sm"></div>
-    <div in:fly={{y: 90}} out:fade={{duration: 250}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-200 rounded-sm"></div>
-    <div in:fly={{y: 140}} out:fade={{duration: 250}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-300 rounded-sm"></div>
-    <div in:fly={{y: 200}} out:fade={{duration: 250}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-400 rounded-sm"></div>
+    <div in:fly={{y: 10}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-50 rounded-sm"></div>
+    <div in:fly={{y:50}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-100 rounded-sm"></div>
+    <div in:fly={{y: 90}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-200 rounded-sm"></div>
+    <div in:fly={{y: 140}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-300 rounded-sm"></div>
+    <div in:fly={{y: 200}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-400 rounded-sm"></div>
 
   {:else if hasError}
 
     <p class="col-span-full">{hasError}</p>
 
   {:else if colors}
-
-      {#each colors.colors as color}
-        <div in:fly={{y: 200}} class="col-span-1">
+      {#each colors.colors as color, index}
+        <div in:fly={{x: -200, duration: 50}} out:fade class="col-span-1 hover:cursor" tabindex="{index}" role="button" onclick={copyColorToClipboard} onkeypress={handleKeyboard}>
           <div class="h-80" style="background-color: {color.hex.value}"></div>
           <p class="my-4 text-center">{color.hex.value}</p>
         </div>
       {/each}
-
   {:else }
     <p class="col-span-full flex justify-center items-center h-80 ">No colors to display</p>
   {/if}
