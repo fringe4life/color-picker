@@ -124,7 +124,7 @@
 
 <header class="dark:bg-[#1F2937] dark:text-white px-5 py-6 flex justify-evenly items-center gap-3 flex-wrap sm:justify-center">
   <input class="shadow-md h-12 w-18 rounded-sm" type="color" bind:value={color} />
-  <select class="leading-6 border border-gray-200 flex-1 text-center shadow-md py-3 px-2 rounded-sm" bind:value={colorStyleSelected}>
+  <select class="hover:cursor-pointer leading-6 border border-gray-200 flex-1 text-center shadow-md py-3 px-2 rounded-sm" bind:value={colorStyleSelected}>
     <option class="hover:shadow-sm" value="monochrome">Monochrome</option>
     <option class="hover:shadow-sm" value="monochrome-dark">Monochrome-dark</option>
     <option class="hover:shadow-sm" value="monochrome-light">Monochrome-light</option>
@@ -155,7 +155,7 @@
 
   {:else if colors}
       {#each colors.colors as color, index}
-        <div in:fly={{x: -200, duration: 50}} out:fade class="col-span-1 hover:cursor" tabindex="{index}" role="button" onclick={copyColorToClipboard} onkeypress={handleKeyboard}>
+        <div in:fly={{x: -200, duration: 50}} out:fade class="col-span-1 hover:cursor-pointer" tabindex="{index}" role="button" onclick={copyColorToClipboard} onkeypress={handleKeyboard}>
           <div class="h-80" style="background-color: {color.hex.value}"></div>
           <p class="my-4 text-center">{color.hex.value}</p>
         </div>
