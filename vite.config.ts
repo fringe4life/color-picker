@@ -17,7 +17,11 @@ export default defineConfig({
         passes: 3,
         drop_console: true,
         drop_debugger: true,
+        ecma: 2020
       },
+      output: {
+        comments: false,
+      }
     },
     rollupOptions: {
       input: [
