@@ -28,7 +28,6 @@ export default defineConfig({
     },
     rollupOptions: {
       input: [
-        path.resolve(__dirname, "src/main.ts"),
         path.resolve(__dirname, "index.html"),
       ]
     }
