@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { KeyboardEventHandler, MouseEventHandler } from "svelte/elements";
   import { fade, fly } from "svelte/transition";
-
+  import copy from '../public/paste.png'
   /**
    * The type for the returned colors from the API.
    */
@@ -14,6 +14,9 @@
 				hsl: {
 					value: string;
 				};
+        name: {
+          value: string;
+        }
 			}[];
 		};
 
@@ -122,7 +125,7 @@
   }
 </script>
 
-<header class="dark:bg-[#1F2937] dark:text-white px-5 py-6 flex justify-evenly items-center gap-3 flex-wrap sm:justify-center">
+<header class="row-start-1 dark:bg-[#1F2937] dark:text-white px-5 py-6 flex justify-evenly items-center gap-3 flex-wrap sm:justify-center">
   <input class="shadow-md h-12 w-18 rounded-sm" type="color" bind:value={color} />
   <select class="hover:cursor-pointer leading-6 border border-gray-200 flex-1 text-center shadow-md py-3 px-2 rounded-sm" bind:value={colorStyleSelected}>
     <option class="hover:shadow-sm" value="monochrome">Monochrome</option>
@@ -139,11 +142,11 @@
 <main class="grid-autofit dark:bg-[#1F2937] dark:text-white">
   {#if isLoading }
   
-    <div in:fly={{y: 10}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-50 rounded-sm"></div>
-    <div in:fly={{y:50}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-100 rounded-sm"></div>
-    <div in:fly={{y: 90}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-200 rounded-sm"></div>
-    <div in:fly={{y: 140}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-300 rounded-sm"></div>
-    <div in:fly={{y: 200}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-400 rounded-sm"></div>
+    <div in:fly={{y: 10}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-50 rounded-sm"></div>
+    <div in:fly={{y: 50}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-100 rounded-sm"></div>
+    <div in:fly={{y: 90}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-200 rounded-sm"></div>
+    <div in:fly={{y: 140}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-300 rounded-sm"></div>
+    <div in:fly={{y: 200}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-400 rounded-sm"></div>
 
   {:else if hasError}
 
@@ -151,18 +154,21 @@
 
   {:else if colors}
       {#each colors.colors as color, index}
-        <div in:fly={{x: -200, duration: 50}} out:fade class="col-span-1 hover:cursor-pointer" tabindex="{index}" role="button" onclick={copyColorToClipboard} onkeypress={handleKeyboard}>
+        <div in:fly={{x: -200, duration: 50}} out:fade class="col-span-1 hover:cursor-copy" tabindex="{index}" role="button" onclick={copyColorToClipboard} onkeypress={handleKeyboard}>
           <div class="h-80" style="background-color: {color.hex.value}"></div>
           <p class="my-4 text-center">{color.hex.value}</p>
+          <img src={copy} alt='' class="size-4 mx-auto" />
+          <span class='sr-only'>click on this to copy color: {color.name.value}</span>
         </div>
       {/each}
   {:else }
-    <p class="col-span-full flex justify-center items-center h-80 ">No colors to display</p>
+    <p class="col-span-full flex justify-center items-center h-full ">No colors to display</p>
   {/if}
 </main>
 
 <footer class="dark:bg-[#1F2937] text-center py-5 hover:text-blue-500 active:text-blue-700">
-  <a href="https://www.flaticon.com/free-icons/palette" title="palette icons">Palette icons created by nawicon - Flaticon</a>
+  <p><a href="https://www.flaticon.com/free-icons/palette" title="palette icons">Palette icons created by nawicon - Flaticon</a></p>
+  <p><a href="https://www.flaticon.com/free-icons/paste" title="paste icons">Paste icons created by Pixel perfect - Flaticon</a></p>
 </footer>
 
 <style>
