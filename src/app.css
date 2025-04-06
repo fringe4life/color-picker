@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+@theme {
+	--color-violet: initital;
+	--color-red: initial;
+	--color-green: initial;
+	--color-blue: initial;
+	--color-indigo: initial;
+	--color-sky: initial;
+	--color-slate: initial;
+	--color-orange: initial;
+	--color-zinc: initial;
+	--color-neutral: initial;
+	--color-rose: initial;
+	--color-pink: initial;
+	--color-fuchsia: initial;
+	--color-cyan: initial;
+	--color-amber: initial;
+	--color-lime: initial;
+	--color-emerald: initial;
+	--color-purple: initial;
+}
+
 :root {
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;

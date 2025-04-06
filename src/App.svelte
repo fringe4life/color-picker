@@ -138,10 +138,6 @@
 
 <main class="grid-autofit dark:bg-[#1F2937] dark:text-white">
   {#if isLoading }
-  <!-- <div class="col-span-full  h-80 flex justify-center items-center">
-    <p class="">Loading...</p>
-    <div class="rounded-full text-transparent border-2 w-10 h-10 animate-spin" ></div>
-  </div> -->
   
     <div in:fly={{y: 10}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-50 rounded-sm"></div>
     <div in:fly={{y:50}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80 bg-grey-200 border dark:bg-teal-100 rounded-sm"></div>

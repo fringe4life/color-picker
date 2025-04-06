@@ -12,6 +12,7 @@ export default defineConfig({
   plugins: [svelte(svelteConfig), tailwindcss()],
   build: {
     minify: 'terser',
+    cssMinify: true,
     terserOptions: {
       compress: {
         passes: 3,
