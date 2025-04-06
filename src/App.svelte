@@ -136,7 +136,7 @@
     <option class="hover:shadow-sm" value="analogic-complement">Analogic-complement</option>
     <option class="hover:shadow-sm" value="triad">Triad</option>
   </select>
-  <button class="text-[#374151] dark:text-white dark:bg-[#3D4B60] shadow-md py-3 px-2 rounded-sm border border-gray-200" onclick={handleClick}>Get Color Scheme</button>
+  <button class="cursor-pointer text-[#374151] dark:text-white dark:bg-[#3D4B60] shadow-md py-3 px-2 rounded-sm border border-gray-200" onclick={handleClick}>Get Color Scheme</button>
 </header>
 
 <main class="grid-autofit dark:bg-[#1F2937] dark:text-white">
