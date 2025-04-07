@@ -20,7 +20,15 @@
 			}[];
 		};
 
-  type MaybePromise<T> = Promise<T | undefined>;
+    /**
+     * A type to manage the possibility of getting the data or not
+     */
+    type MaybePromise<T> = Promise<T | undefined>;
+
+    /**
+     * a type to handle the possibility that the type is nullish
+     */
+    type Maybe<T> = T | undefined | null;
 
   /**
    * The baseUrl for the API to fetch color schemes.
@@ -57,22 +65,14 @@
   /**
    * The colors state.
    */
-  let colors: ReturnedColors | undefined = $state(undefined);
+  let colors: Maybe<ReturnedColors> = $state(null);
   
   /**
    * @abstract updates the dom with the fetched colors.
    * @param _ The event object.
    */
-  const handleClick: MouseEventHandler<HTMLButtonElement> = async (_) => {
-    isLoading = true;
+  const handleClick: MouseEventHandler<HTMLButtonElement> = async () => {
     colors = await fetchColors();
-
-    if(!colors) {
-      hasError = "Failed to fetch colors";
-      isLoading = false;
-      return;
-    }
-    isLoading = false;
   } 
 
   /**
@@ -108,26 +108,30 @@
    * Fetch colors from the API
    */
   async function fetchColors(): MaybePromise<ReturnedColors> {
-    try {
+        hasError = "";
+				isLoading = true;
+				try {
 					const query = `?hex=${colorForQuery}&mode=${colorStyleSelected}&count=5`;
 
 					const response = await fetch(`${baseUrl}${query}`);
 					if (response.ok) {
-						const data = await response.json() as ReturnedColors;
+						const data = (await response.json()) as ReturnedColors;
 						return data;
 					}
+          throw Error("Failed to fetch colors")
 				} catch (error) {
-					if(error instanceof Error) {
-            hasError = error.message;
-          }
-				}
+						hasError = 'Failed to fetch colors';
+					
+				} finally {
+          isLoading = false
+        }
 
   }
 </script>
 
 <header class="row-start-1 dark:bg-[#1F2937] dark:text-white px-5 py-6 flex justify-evenly items-center gap-3 flex-wrap sm:justify-center">
   <input class="shadow-md h-12 w-18 rounded-sm" type="color" bind:value={color} />
-  <select class="hover:cursor-pointer leading-6 border border-gray-200 flex-1 text-center shadow-md py-3 px-2 rounded-sm" bind:value={colorStyleSelected}>
+  <select class="cursor-pointer leading-6 border border-gray-200 flex-1 text-center shadow-md py-3 px-2 rounded-sm" bind:value={colorStyleSelected}>
     <option class="hover:shadow-sm" value="monochrome">Monochrome</option>
     <option class="hover:shadow-sm" value="monochrome-dark">Monochrome-dark</option>
     <option class="hover:shadow-sm" value="monochrome-light">Monochrome-light</option>
@@ -142,22 +146,22 @@
 <main class="grid-autofit dark:bg-[#1F2937] dark:text-white">
   {#if isLoading }
   
-    <div in:fly={{y: 10}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-50 rounded-sm"></div>
-    <div in:fly={{y: 50}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-100 rounded-sm"></div>
-    <div in:fly={{y: 90}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-200 rounded-sm"></div>
-    <div in:fly={{y: 140}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-300 rounded-sm"></div>
-    <div in:fly={{y: 200}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-400 rounded-sm"></div>
+    <div in:fly={{y: 10}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-100 rounded-sm"></div>
+    <div in:fly={{y: 50}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-200 rounded-sm"></div>
+    <div in:fly={{y: 90}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-300 rounded-sm"></div>
+    <div in:fly={{y: 140}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-400 rounded-sm"></div>
+    <div in:fly={{y: 200}} out:fade={{duration: 50}} class="animate-pulse col-span-1 h-80  border bg-teal-500 rounded-sm"></div>
 
   {:else if hasError}
 
-    <p class="col-span-full">{hasError}</p>
+    <p class="col-span-full flex justify-center items-center h-full text-[#f00]">{hasError}</p>
 
   {:else if colors}
       {#each colors.colors as color, index}
         <div in:fly={{x: -200, duration: 50}} out:fade class="col-span-1 hover:cursor-copy" tabindex="{index}" role="button" onclick={copyColorToClipboard} onkeypress={handleKeyboard}>
           <div class="h-80" style="background-color: {color.hex.value}"></div>
           <p class="my-4 text-center">{color.hex.value}</p>
-          <img src={copy} alt='' class="size-4 mx-auto" />
+          <img src={copy} alt='' class="size-4 mx-auto mb-2" />
           <span class='sr-only'>click on this to copy color: {color.name.value}</span>
         </div>
       {/each}
